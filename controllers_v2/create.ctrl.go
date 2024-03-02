@@ -18,13 +18,15 @@ func NewCreateUserController(svc *service.LndhubService) *CreateUserController {
 }
 
 type CreateUserResponseBody struct {
-	Login    string `json:"login"`
-	Password string `json:"password"`
-	ID       int64  `json:"id"`
+	Success  bool   `json:"success"`
 }
 type CreateUserRequestBody struct {
-	Login    string `json:"login"`
-	Password string `json:"password"`
+	Login     string `json:"login"`
+	Password  string `json:"password"`
+	Lnurl     string `json:"lnurl"`
+	Uma       string `json:"uma"`
+	PartnerID uint64 `json:"partner_id"`
+	ID        int64  `json:"id"`
 }
 
 // CreateUser godoc
@@ -46,16 +48,14 @@ func (controller *CreateUserController) CreateUser(c echo.Context) error {
 		c.Logger().Errorf("Failed to load create user request body: %v", err)
 		return c.JSON(http.StatusBadRequest, responses.BadArgumentsError)
 	}
-	user, err := controller.svc.CreateUser(c.Request().Context(), body.Login, body.Password)
+	_, err := controller.svc.CreateUser(c.Request().Context(), body.Login, body.Password, body.Lnurl, body.Uma, body.PartnerID)
 	if err != nil {
 		c.Logger().Errorf("Failed to create user: %v", err)
 		return c.JSON(http.StatusBadRequest, responses.BadArgumentsError)
 	}
 
 	var ResponseBody CreateUserResponseBody
-	ResponseBody.Login = user.Login
-	ResponseBody.Password = user.Password
-	ResponseBody.ID = user.ID
+	ResponseBody.Success = true
 
 	return c.JSON(http.StatusOK, &ResponseBody)
 }

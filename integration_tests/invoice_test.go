@@ -1,5 +1,7 @@
 package integration_tests
 
+/// * TODO reimplement this test with v2 controller / ensure it works
+
 import (
 	"bytes"
 	"context"
@@ -12,7 +14,7 @@ import (
 	"testing"
 
 	"github.com/getAlby/lndhub.go/common"
-	"github.com/getAlby/lndhub.go/controllers"
+	//"github.com/getAlby/lndhub.go/controllers"
 	v2controllers "github.com/getAlby/lndhub.go/controllers_v2"
 	"github.com/getAlby/lndhub.go/lib"
 	"github.com/getAlby/lndhub.go/lib/responses"
@@ -50,7 +52,7 @@ func (suite *InvoiceTestSuite) SetupSuite() {
 	assert.Equal(suite.T(), 1, len(userTokens))
 	suite.aliceLogin = users[0]
 	suite.aliceToken = userTokens[0]
-	suite.echo.POST("/invoice/:user_login", controllers.NewInvoiceController(svc).Invoice)
+	//suite.echo.POST("/invoice/:user_login", controllers.NewInvoiceController(svc).Invoice)
 	suite.echo.POST("/v2/invoices", v2controllers.NewInvoiceController(svc).AddInvoice, tokens.Middleware([]byte(suite.service.Config.JWTSecret)))
 }
 

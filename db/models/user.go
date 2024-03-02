@@ -12,6 +12,9 @@ import (
 type User struct {
 	ID          int64          `bun:",pk,autoincrement"`
 	Email       sql.NullString `bun:",unique"`
+	Lnurl       string		   `bun:",unique"`
+	Uma  	    string		   `bun:",unique"`
+	PartnerID   uint64          `bun:",notnull"`
 	Login       string         `bun:",unique,notnull"`
 	Password    string         `bun:",notnull"`
 	CreatedAt   time.Time      `bun:",nullzero,notnull,default:current_timestamp"`

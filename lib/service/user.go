@@ -19,7 +19,7 @@ import (
 	passwordvalidator "github.com/wagslane/go-password-validator"
 )
 
-func (svc *LndhubService) CreateUser(ctx context.Context, login string, password string) (user *models.User, err error) {
+func (svc *LndhubService) CreateUser(ctx context.Context, login string, password string, lnurl string, uma string, partnerId uint64) (user *models.User, err error) {
 
 	user = &models.User{}
 
@@ -51,7 +51,10 @@ func (svc *LndhubService) CreateUser(ctx context.Context, login string, password
 	// we only store the hashed password but return the initial plain text password in the HTTP response
 	hashedPassword := security.HashPassword(password)
 	user.Password = hashedPassword
-
+	// uma / lnurl additions
+	user.Lnurl = lnurl
+	user.Uma = uma
+	user.PartnerID = partnerId
 	// Create user and the user's accounts
 	// We use double-entry bookkeeping so we use 4 accounts: incoming, current, outgoing and fees
 	// Wrapping this in a transaction in case something fails
