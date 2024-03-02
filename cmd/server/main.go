@@ -23,7 +23,7 @@ import (
 	"github.com/getAlby/lndhub.go/lib/tokens"
 	"github.com/getAlby/lndhub.go/lib/transport"
 	"github.com/getsentry/sentry-go"
-	"github.com/joho/godotenv"
+	//"github.com/joho/godotenv"
 	"github.com/kelseyhightower/envconfig"
 	"github.com/labstack/echo/v4"
 	echoSwagger "github.com/swaggo/echo-swagger"
@@ -47,15 +47,11 @@ import (
 // @tokenUrl                             /auth
 // @schemes                              https http
 func main() {
-
 	c := &service.Config{}
-
 	// Load configruation from environment variables
-	err := godotenv.Load(".env")
-	if err != nil {
-		fmt.Println("Failed to load .env file")
-	}
-	err = envconfig.Process("", c)
+	c.LoadEnv()
+
+	err := envconfig.Process("", c)
 	if err != nil {
 		log.Fatalf("Error loading environment variables: %v", err)
 	}
@@ -156,7 +152,7 @@ func main() {
 	secured := e.Group("", tokens.Middleware(c.JWTSecret), svc.ValidateUserMiddleware(), logMw)
 	securedWithStrictRateLimit := e.Group("", tokens.Middleware(c.JWTSecret), svc.ValidateUserMiddleware(), strictRateLimitMiddleware, logMw)
 
-	transport.RegisterLegacyEndpoints(svc, e, secured, securedWithStrictRateLimit, strictRateLimitMiddleware, tokens.AdminTokenMiddleware(c.AdminToken), logMw)
+	//transport.RegisterLegacyEndpoints(svc, e, secured, securedWithStrictRateLimit, strictRateLimitMiddleware, tokens.AdminTokenMiddleware(c.AdminToken), logMw)
 	transport.RegisterV2Endpoints(svc, e, secured, securedWithStrictRateLimit, strictRateLimitMiddleware, tokens.AdminTokenMiddleware(c.AdminToken), logMw)
 
 	//Swagger API spec

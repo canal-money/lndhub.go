@@ -2,7 +2,11 @@ package service
 
 import (
 	"fmt"
+	"os"
+	"path/filepath"
 	"strings"
+
+	"github.com/joho/godotenv"
 )
 
 type Config struct {
@@ -50,6 +54,35 @@ type Config struct {
 	RabbitMQPaymentConsumerQueueName string  `envconfig:"RABBITMQ_PAYMENT_CONSUMER_QUEUE_NAME" default:"lnd_payment_consumer"`
 	Branding                         BrandingConfig
 }
+
+func (config *Config) LoadEnv() {
+	err := godotenv.Load(findEnvDir())
+	if err != nil {
+		panic(fmt.Errorf("failed to load .env file: %v", err))
+	}
+}
+
+func findEnvDir() string {
+	currentDir , err := os.Getwd()
+	if err != nil {
+		// failed to find root go.mod
+		panic(fmt.Errorf("failed to find .env directory (by go.mod)"))
+	}
+	for {
+		goModPath := filepath.Join(currentDir, "go.mod")
+		if _, err := os.Stat(goModPath); err == nil {
+			break
+		}
+		parent := filepath.Dir(currentDir)
+		if parent == currentDir {
+			// reached the root
+			panic(fmt.Errorf("failed to find .env directory (by go.mod)"))
+		}
+		currentDir = parent
+	}
+	return filepath.Join(currentDir, ".env")
+}
+
 type Limits struct {
 	MaxSendVolume     int64
 	MaxSendAmount     int64
@@ -83,3 +116,4 @@ func (flm *FooterLinkMap) Decode(value string) error {
 	*flm = m
 	return nil
 }
+
