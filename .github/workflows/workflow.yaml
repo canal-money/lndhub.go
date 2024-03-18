@@ -20,7 +20,7 @@ jobs:
       - name: login, build, and push
         run: |
           docker login --username ${{ github.repository_owner }} --password ${{ secrets.PAT }} $REGISTRY
-          docker build . -t $REGISTRY/$IMAGENAME:latest
+          docker build . -t "${{ env.REGISTRY }}/${{ env.IMAGENAME }}:latest"
           docker push $REGISTRY/$IMAGENAME:latest
 
 
