@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # checkout codebase
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       # login, build, and push to ghcr
       - name: Docker build
         uses: mr-smithers-excellent/docker-build-push@v5
@@ -23,7 +23,7 @@ jobs:
           password: ${{ secrets.PAT }}
       # now use the new image to deploy our instance
       - name: Checkout deployment repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           repository: canal-money/lndhub-deployment
           path: infra
