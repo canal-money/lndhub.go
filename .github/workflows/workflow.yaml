@@ -39,7 +39,6 @@ jobs:
           repository: canal-money/lndhub-deployment
           branch: main
           commitChange: true
-          updateFile: true
           message: 'CD: Update lndhub tag to ${{ steps.build.outputs.tags }}'
           token: ${{ secrets.PAT }}
           workDir: infra
