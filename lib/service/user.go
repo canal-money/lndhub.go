@@ -161,8 +161,8 @@ func (svc *LndhubService) CheckOutgoingPaymentAllowed(c echo.Context, lnpayReq *
 		if volume > limits.MaxSendVolume {
 			svc.Logger.Errorj(
 				log.JSON{
-					"message": 			"transaction volume exceeded",
-					"lndhub_user_id": 	userId,
+					"message":        "transaction volume exceeded",
+					"lndhub_user_id": userId,
 				},
 			)
 			sentry.CaptureMessage(fmt.Sprintf("transaction volume exceeded for user %d", userId))
