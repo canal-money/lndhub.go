@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # checkout codebase
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v2
       # login, build, and push to ghcr
       - name: Docker build
         uses: mr-smithers-excellent/docker-build-push@v5
@@ -23,7 +23,7 @@ jobs:
           password: ${{ secrets.PAT }}
       # now use the new image to deploy our instance
       - name: Checkout deployment repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
         with:
           repository: canal-money/lndhub-deployment
           path: infra
@@ -38,7 +38,7 @@ jobs:
           value: ${{ steps.build.outputs.tags }}
           repository: canal-money/lndhub-deployment
           branch: main
-          commitChange: true
+          createPR: false
           message: 'CD: Update lndhub tag to ${{ steps.build.outputs.tags }}'
           token: ${{ secrets.PAT }}
           workDir: infra
