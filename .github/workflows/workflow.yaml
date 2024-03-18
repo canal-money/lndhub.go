@@ -11,7 +11,7 @@ jobs:
   build:
     env:
       REGISTRY: ghcr.io
-      IMAGENAME: "${{ github.event.repository.name }}-canal"
+      IMAGENAME: "${{ github.repository_owner }}/${{ github.event.repository.name }}"
     runs-on: ubuntu-latest
     steps:
         # checkout codebase
