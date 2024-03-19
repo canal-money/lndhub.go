@@ -24,5 +24,5 @@ FROM alpine as final
 COPY --from=builder /build/main /bin/
 COPY --from=builder /build/invoice-republishing /bin/
 COPY --from=builder /build/payment-reconciliation /bin/
-RUN cp $HOME/.env .
+
 ENTRYPOINT [ "/bin/main" ]
