@@ -47,9 +47,12 @@ import (
 // @tokenUrl                             /auth
 // @schemes                              https http
 func main() {
+	randomVar := os.Getenv("JWT_ACCESS_EXPIRY")
+	log.Printf("JWT_ACCESS_EXPIRY: %s", randomVar)
+
 	c := &service.Config{}
 	// Load configruation from environment variables
-	c.LoadEnv()
+	//c.LoadEnv()
 
 	err := envconfig.Process("", c)
 	if err != nil {
