@@ -54,10 +54,11 @@ func main() {
 	if err != nil {
 		log.Fatalf("Error loading environment variables: %v", err)
 	}
-
+	
 	// Setup logging to STDOUT or a configrued log file
 	logger := lib.Logger(c.LogFilePath)
-
+	// TODO rm - testing
+	logger.Printf("Config: %+v", c)
 	// Open a DB connection based on the configured DATABASE_URI
 	dbConn, err := db.Open(c)
 	if err != nil {
