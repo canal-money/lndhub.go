@@ -63,7 +63,8 @@ func (config *Config) LoadEnv() {
 		envErr := godotenv.Load()
 		if envErr != nil {
 			// failed to load .env file
-			panic(fmt.Errorf("failed to load .env file: %v", envErr))
+			//panic(fmt.Errorf("failed to load .env file: %v", envErr))
+			log.Fatalf("failed to load .env file: %v", envErr)
 		}
 	}
 	// try directly from environment, this supports running the docker image with an environment set by docker compose
