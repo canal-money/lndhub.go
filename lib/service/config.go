@@ -79,6 +79,13 @@ func LoadEphemeralEnv() {
 	for _, envVar := range os.Environ() {
 		pair := strings.Split(envVar, "=")
 		key, val := pair[0], pair[1]
+		// if key is DATABASE_URI, check to see if there were query params
+		if key == "DATABASE_URI" {
+			// if there are query params, add them to the map
+			if strings.Contains(val, "?") {	
+				val = val + pair[2]
+			}
+		}
 		// set to environment
 		os.Setenv(key, val)
 		// add to map
