@@ -23,7 +23,6 @@ import (
 	"github.com/getAlby/lndhub.go/lib/tokens"
 	"github.com/getAlby/lndhub.go/lib/transport"
 	"github.com/getsentry/sentry-go"
-	//"github.com/joho/godotenv"
 	"github.com/kelseyhightower/envconfig"
 	"github.com/labstack/echo/v4"
 	echoSwagger "github.com/swaggo/echo-swagger"
@@ -47,12 +46,9 @@ import (
 // @tokenUrl                             /auth
 // @schemes                              https http
 func main() {
-	randomVar := os.Getenv("JWT_ACCESS_EXPIRY")
-	log.Printf("JWT_ACCESS_EXPIRY: %s", randomVar)
-
 	c := &service.Config{}
 	// Load configruation from environment variables
-	//c.LoadEnv()
+	c.LoadEnv()
 
 	err := envconfig.Process("", c)
 	if err != nil {

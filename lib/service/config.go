@@ -56,10 +56,29 @@ type Config struct {
 }
 
 func (config *Config) LoadEnv() {
-	err := godotenv.Load(findEnvDir())
-	if err != nil {
-		panic(fmt.Errorf("failed to load .env file: %v", err))
+	// try from file
+	fileErr := godotenv.Load(findEnvDir())
+	// try directly from environment, this supports running the docker image with an environment set by docker compose
+	envErr := LoadEphemeralEnv()
+	if fileErr != nil || envErr != nil {
+		panic(fmt.Errorf("failed to load .env file: %v", fileErr))
 	}
+}
+
+func LoadEphemeralEnv() error {
+	var env map[string]string
+	// read ephemeral environment variables into map
+	env, envErr := godotenv.Read()
+	// return early if there was an error reading ephemeral environment
+	if envErr != nil {
+		return envErr
+	}
+	// load each detected environment variable into the (other?) environment
+	for key, value := range env {
+		os.Setenv(key, value)
+	}
+	// success
+	return nil
 }
 
 func findEnvDir() string {
