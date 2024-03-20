@@ -21,6 +21,7 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.repository_owner }}
           password: ${{ secrets.PAT }}
+          addLatest: true
       # now use the new image to deploy our instance
       - name: Checkout deployment repo
         uses: actions/checkout@v4
