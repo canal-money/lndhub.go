@@ -68,27 +68,22 @@ func (config *Config) LoadEnv() {
 		}
 	}
 	// try directly from environment, this supports running the docker image with an environment set by docker compose
-	ephErr := LoadEphemeralEnv()
-	if ephErr != nil {
-		// failed to load ephemeral environment
-		panic(fmt.Errorf("failed to load ephemeral environment: %v", ephErr))
-	}
+	LoadEphemeralEnv()
+	// after the enviroment is loaded we attempt to populate the config struct, which has
+	// required fields as constraints, so if the environment is not set correctly, the program will panic
 }
 
-func LoadEphemeralEnv() error {
-	var env map[string]string
+func LoadEphemeralEnv() {
+	env := make(map[string]string)
 	// read ephemeral environment variables into map
-	env, envErr := godotenv.Read()
-	// return early if there was an error reading ephemeral environment
-	if envErr != nil {
-		return envErr
+	for _, envVar := range os.Environ() {
+		pair := strings.Split(envVar, "=")
+		key, val := pair[0], pair[1]
+		// set to environment
+		os.Setenv(key, val)
+		// add to map
+		env[pair[0]] = pair[1]
 	}
-	// load each detected environment variable into the (other?) environment
-	for key, value := range env {
-		os.Setenv(key, value)
-	}
-	// success
-	return nil
 }
 
 func findEnvDir() (string, error) {
