@@ -84,7 +84,7 @@ func LoadEphemeralEnv() {
 			// if there are query params, add them to the map
 			if strings.Contains(val, "?") {	
 				// add back 'sslmode', '=' and 'disabled'
-				val = val + pair[2] + "=" + pair[3]
+				val = val + "=" + pair[2]
 			}
 		}
 		// set to environment
