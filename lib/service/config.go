@@ -2,6 +2,7 @@ package service
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -57,11 +58,19 @@ type Config struct {
 
 func (config *Config) LoadEnv() {
 	// try from file
-	fileErr := godotenv.Load(findEnvDir())
+	envPath, fileErr := findEnvDir()
+	if envPath != "" && fileErr == nil {
+		envErr := godotenv.Load()
+		if envErr != nil {
+			// failed to load .env file
+			panic(fmt.Errorf("failed to load .env file: %v", envErr))
+		}
+	}
 	// try directly from environment, this supports running the docker image with an environment set by docker compose
-	envErr := LoadEphemeralEnv()
-	if fileErr != nil && envErr != nil {
-		panic(fmt.Errorf("failed to load .env file: %v", fileErr))
+	ephErr := LoadEphemeralEnv()
+	if ephErr != nil {
+		// failed to load ephemeral environment
+		panic(fmt.Errorf("failed to load ephemeral environment: %v", ephErr))
 	}
 }
 
@@ -81,11 +90,12 @@ func LoadEphemeralEnv() error {
 	return nil
 }
 
-func findEnvDir() string {
+func findEnvDir() (string, error) {
 	currentDir , err := os.Getwd()
 	if err != nil {
 		// failed to find root go.mod
-		panic(fmt.Errorf("failed to find .env directory (by go.mod)"))
+		log.Fatalf("failed to find root go.mod: %v", err)
+		return "", err
 	}
 	for {
 		goModPath := filepath.Join(currentDir, "go.mod")
@@ -94,12 +104,13 @@ func findEnvDir() string {
 		}
 		parent := filepath.Dir(currentDir)
 		if parent == currentDir {
-			// reached the root, attempt to 
-			panic(fmt.Errorf("failed to find .env directory (by go.mod)"))
+			//panic(fmt.Errorf("failed to find .env directory (by go.mod)"))
+			log.Fatalf("failed to find .env directory (by go.mod)")
+			return "", fmt.Errorf("failed to find .env directory (by go.mod)")
 		}
 		currentDir = parent
 	}
-	return filepath.Join(currentDir, ".env")
+	return filepath.Join(currentDir, ".env"), nil
 }
 
 type Limits struct {
