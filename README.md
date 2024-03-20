@@ -102,7 +102,6 @@ To run your own local lightning network and LND you can use [Lightning Polar](ht
 
 Alternatively you can also use the [Alby simnetwork](https://github.com/getAlby/lightning-browser-extension/wiki/Test-setup)
 
-
 ## Database
 
 LndHub.go requires a PostgreSQL database backend.
