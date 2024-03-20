@@ -101,7 +101,7 @@ func findEnvDir() (string, error) {
 		parent := filepath.Dir(currentDir)
 		if parent == currentDir {
 			//panic(fmt.Errorf("failed to find .env directory (by go.mod)"))
-			log.Fatalf("failed to find .env directory (by go.mod)")
+			log.Printf("failed to find .env directory (by go.mod)")
 			return "", fmt.Errorf("failed to find .env directory (by go.mod)")
 		}
 		currentDir = parent
